@@ -2,7 +2,7 @@
 
 """ Plotting VPP graph """
 
-__author__    = "Mani Amoozadeh"
+__author__  = "Mani Amoozadeh"
 
 import os
 import re
