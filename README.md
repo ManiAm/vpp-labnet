@@ -2,7 +2,7 @@
 
 Save the VPP graph into a file.
 
-vppctl# show vlib graph
+    vppctl# show vlib graph
 
 First column is the name of the node.
 The second column is the name of the children of that node.
