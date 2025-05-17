@@ -1,0 +1,60 @@
+services:
+
+  H1:
+    image: vpp-img
+    container_name: H1
+    hostname: vpp_h1
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    ulimits:
+      nofile:
+        soft: 100000
+        hard: 100000
+    networks:
+      - br1
+
+  H3:
+    image: vpp-img
+    container_name: H3
+    hostname: vpp_h3
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    ulimits:
+      nofile:
+        soft: 100000
+        hard: 100000
+    networks:
+      - br2
+
+  H2:
+    image: vpp-img
+    container_name: H2
+    hostname: vpp_h2
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    ulimits:
+      nofile:
+        soft: 100000
+        hard: 100000
+    networks:
+      - br1
+      - br2
+
+networks:
+  br1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+
+  br2:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 20.20.20.0/24
