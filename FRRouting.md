@@ -1,7 +1,92 @@
 
 # FRRouting
 
-`Free Range Routing` or `FRRouting` or `FRR` is a fully featured, high performance, free software IP routing suite written primarily in C. It implements all standard routing protocols such as distant-vector routing (RIP, EIGRP), link-state routing (OSPF, IS-IS), multicast routing (PIMS), BGP, LDP, MPLS, BFD and more. FRR runs on all modern *NIX operating systems, including Linux and the BSDs, and is distributed under GPLv2. You can check the feature matrix in [here](https://docs.frrouting.org/en/stable-10.2/about.html#feature-matrix). FRR git repository is in [here](https://github.com/FRRouting/frr).
+`Free Range Routing` or `FRRouting` or `FRR` is a fully featured, high performance, free software IP routing suite written primarily in C. FRR is built as a modular routing stack composed of independent daemons. Each daemon is responsible for a specific function.
+
+IGP – Distance Vector Protocols
+
+| Daemon     | Description                                                                                                                                              |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ripd**   | RIP for IPv4. Classic distance-vector protocol using hop count metric (max 15).                                                                          |
+| **ripngd** | RIPng for IPv6. Same distance-vector behavior as RIP but for IPv6.                                                                                       |
+| **babeld** | Babel protocol. Advanced distance-vector protocol with fast convergence and loop-avoidance improvements. Often used in mesh and dual-stack environments. |
+| **eigrpd** | EIGRP. Technically an advanced distance-vector. Uses DUAL algorithm and maintains topology information.                                                  |
+
+IGP – Link-State Protocols
+
+| Daemon      | Description                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| **ospfd**   | OSPFv2 (IPv4) link-state routing protocol. Builds LSDB and runs SPF.                         |
+| **ospf6d**  | OSPFv3 (IPv6) link-state routing protocol.                                                   |
+| **isisd**   | IS-IS link-state routing protocol supporting IPv4 and IPv6.                                  |
+| **fabricd** | OpenFabric. Lightweight IS-IS–derived link-state protocol optimized for data center fabrics. |
+
+EGP - Path Vector Protocols
+
+| Daemon   | Protocol | Description                                                                                       |
+| -------- | -------- | ------------------------------------------------------------------------------------------------- |
+| **bgpd** | BGP      | Border Gateway Protocol for inter-domain routing, supports iBGP, eBGP, EVPN, VPNv4/v6, MPLS, etc. |
+
+Fast Failure Detection Protocols
+
+| Daemon   | Protocol | Description                                                                                           |
+| -------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| **bfdd** | BFD      | Bidirectional Forwarding Detection. Lightweight protocol for fast failure detection between routers.  |
+
+Multicast Routing
+
+| Daemon    | Description                                                                       |
+| --------- | --------------------------------------------------------------------------------- |
+| **pimd**  | PIM-SM (Protocol Independent Multicast – Sparse Mode) for IPv4 multicast routing. |
+| **pim6d** | PIM for IPv6 multicast.                                                           |
+
+MPLS and Segment Routing
+
+| Daemon    | Description                                                    |
+| --------- | -------------------------------------------------------------- |
+| **ldpd**  | LDP (Label Distribution Protocol) for MPLS label distribution. |
+| **pathd** | Segment Routing (SR-TE) path computation and management.       |
+
+Policy based Routing
+
+| Daemon   | Description                                                                                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **pbrd** | Applies match/action rules (source IP, destination IP, ports, interfaces, DSCP, etc.) to steer traffic based on policy rather than pure destination-based routing. |
+
+Overlay / NBMA & Tunneling
+
+| Daemon    | Description                                                                                                                              |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **nhrpd** | Next Hop Resolution Protocol daemon. Used in DMVPN-style hub-and-spoke or NBMA overlay networks to dynamically resolve tunnel endpoints. |
+
+High Availability
+
+| Daemon    | Description                                                                |
+| --------- | -------------------------------------------------------------------------- |
+| **vrrpd** | Implements VRRP (Virtual Router Redundancy Protocol) for gateway failover. |
+
+Core Infrastructure
+
+| Daemon       | Description                                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **zebra**    | Core routing manager. Installs routes into the Linux kernel, manages interfaces, VRFs, nexthops, and provides an API for all other daemons. |
+| **watchfrr** | Supervisor process that monitors and restarts FRR daemons if they crash.                                                                    |
+| **staticd**  | Handles static routes configuration and pushes them to zebra.                                                                               |
+| **mgmtd**    | Centralized management daemon (newer architecture replacing older vtysh-only management approach).                                          |
+
+SNMP / Management
+
+| Daemon    | Description                                                                                        |
+| --------- | -------------------------------------------------------------------------------------------------- |
+| **snmpd** | SNMP support for FRR (if enabled).                                                                 |
+
+Testing and Route Injection Tools
+
+| Daemon     | Description                                                                 |
+| ---------- | --------------------------------------------------------------------------- |
+| **sharpd** | Used for testing and injecting routes (primarily debugging/testing).        |
+
+FRR runs on all modern *NIX operating systems, including Linux and the BSDs, and is distributed under GPLv2. You can check the feature matrix in [here](https://docs.frrouting.org/en/stable-10.2/about.html#feature-matrix). FRR git repository is in [here](https://github.com/FRRouting/frr).
 
 FRR is widely used in network environments for its flexibility, performance, and support for a broad range of routing protocols. It is designed to be modular, allowing users to enable or disable specific routing protocols as needed. It integrates well with the Linux networking stack, leveraging its capabilities to provide efficient and scalable routing solutions.
 
@@ -41,7 +126,7 @@ Add your username into the frr group, and restart the system for the changes to 
 sudo usermod -a -G frr <username>
 ```
 
-Open the FRR daemon file with the edior of your choice:
+Open the FRR daemon file with the editor of your choice:
 
 ```bash
 sudo nano /etc/frr/daemons
